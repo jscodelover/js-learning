@@ -166,3 +166,84 @@ In other object-oriented programming languages, the `this` keyword always refers
 - #### Note :  
      The `bind()` method creates a copy of the function and sets the `this` keyword, while the `call()` and `apply()` methods sets the `this` keyword and calls the function immediately. The `bind()` and `call()` methods accepts comma separated values whereas `apply()` method accepts array of arguments. 
      [For more detailed example.](https://ui.dev/this-keyword-call-apply-bind-javascript/)
+
+- ### Polyfill for Bind
+  ```
+  let name = { firstName: 'Manisha', lastName: 'Basra'};
+
+  let printName = function(arg, name){
+    console.log(`${this.firstName} ${this.lastName} ${arg} ${name}`);
+  }
+
+
+  let printMyName = printName.bind(name, 'in Love');
+  printMyName(['with javascript']);
+
+  Function.prototype.myBind =  function(...args){
+    const myThis = this;
+    return function(arg){
+      if(typeof arg === 'string' )
+        myThis.apply(args[0], [...args.slice(1), arg]);
+      else
+        myThis.apply(args[0], [...args.slice(1), ...arg]);
+    }
+  }
+
+  let printMyNameAgain = printName.myBind(name, 'in Love');
+  printMyNameAgain(['with javascript from my bind method']);
+
+  ```
+  
+ - ### Polyfill for Call
+    ```
+    let name = {
+     firstName: 'Manisha',
+     lastName: "Basra"
+    }
+
+    let printName= function(arg1, arg2){
+      console.log(`${this.firstName} ${this.lastName}, ${arg1}, ${arg2}`);
+    }
+
+    Function.prototype.myCall = function(context, ...arg){
+      // context with object reference
+      console.log(context) 
+
+      context.fn = this;
+       
+     // context with printName func as property so that `this` can refer to its current object
+      console.log(context) 
+      
+      context.fn(...arg);  // to pass all the string arguments
+    }
+
+    printName.myCall( name, 'Hello', 'World!!');
+
+    ```
+      
+ - ### Polyfill for Apply
+    ```
+    let name = {
+     firstName: 'Manisha',
+     lastName: "Basra"
+    }
+
+    let printName= function(arg){
+     console.log(`${this.firstName} ${this.lastName} is going to learn ${arg.toString()}`);
+    }
+
+    Function.prototype.myCall = function(context, ...arg){
+      // context with object reference
+      console.log(context) 
+
+      context.fn = this;
+       
+     // context with printName func as property so that `this` can refer to its current object
+      console.log(context) 
+      
+      context.fn(arg);  // to pass single array argument
+    }
+
+    printName.myCall( name, ['React Native', 'Js concept']);
+
+    ```

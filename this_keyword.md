@@ -77,5 +77,40 @@
         myGhost.ghost(); // 👻 Boo!!
       ```
       ##### Note : It’s important to know how, when and from where the function is called, does not matter where function is declared.
+   
+  - ## Explicit and Fixed Binding of `this`
+  
+      - We can explicitly tell the JavaScript engine to set this to point to a certain value using `call`, `apply` or `bind`.
 
 
+  - ## `new` Binding
+      - The `new` keyword in front of any function turns the function call into constructor call and below things occurred when new keyword put in front of   function
+      
+        - A brand new empty object gets created
+        - new empty object gets linked to prototype property of that function
+        - same new empty object gets bound as this keyword for execution context of that function call
+        - if that function does not return anything then it implicit returns this object.
+
+        ```
+        function bike() {
+          var name = "Ninja";
+          this.maker = "Kawasaki";
+          console.log(this.name + " " + maker);  // undefined Bajaj
+        }
+
+        var name = "Pulsar";
+        var maker = "Bajaj";
+
+        obj = new bike();
+        console.log(obj.maker);                  // "Kawasaki"
+        ```
+      
+        - In the above code snippet, "bike" function is get called with `new` keyword in front of it. So, it creates a new object then that new object gets linked to  prototype chain of function "bike", after that the created new object bound to `this` object and function returns `this` object. That’s how the returned `this` object assigned to "obj" and `console.log(obj.maker)` prints “Kawasaki” .
+      
+        - In the above code snippet, "this.name" inside function "bike()" does not print “Ninja” or “Pulsar” instead it prints `undefined` because the name variable declared inside the function "bike()" and "this.name" are totally 2 different things. Same way "this.maker" and "maker" are different inside function "bike()" .
+
+- ### Precedence of `this` keyword bindings
+   - First it checks whether the function is called with new keyword.
+   - Second it checks whether the function is called with call() or apply() method means explicit binding.
+   - Third it checks if the function called via context object (implicit binding).
+   - Default global object (undefined in case of strict mode).
